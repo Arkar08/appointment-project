@@ -3,13 +3,43 @@ import { MdFilterList } from "react-icons/md";
 import { AiOutlineReload } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Footer from "../Components/Footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Allappointment = () => {
+    const [user , setUser] = useState([])
 
     const reloadClick = () =>{
         window.location.reload()
     }
 
+    useEffect(()=>{
+        const getData = async()=>{
+                await axios.get('http://localhost:3000/users')
+                .then(res => 
+                    setUser(res.data)
+                ).catch(err=>{
+                    console.log(err)
+                })
+           
+        } 
+        getData()
+    })
+    const handleCancel = (statu) =>{
+        const appUser = user.filter((u)=>{
+            return u.id === statu.id
+        })
+        if(appUser){
+            setUser(user.map((use)=>{
+                return {
+                    ...use , status:"Cancelled"
+                }
+            }))
+        }
+        else{
+            return;
+        }
+    }
   return (
     <>
         <div className="flex justify-between items-center px-12 mt-4">
@@ -33,10 +63,10 @@ const Allappointment = () => {
                         Appointment ID
                     </th>
                     <th>
-                        Patient ID 
+                        Patient Name
                     </th>
                     <th >
-                        Doctor ID  
+                        Doctor Name  
                     </th>
                     <th >
                         Appointment Date
@@ -51,157 +81,27 @@ const Allappointment = () => {
                     <th>Is Cancel</th>
                 </tr>
             </thead>
-            <tbody className="bg-green-300">
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
-                <tr className="border-b h-[50px]">
-                    <td>
-                        <input type="checkbox" className="cursor-pointer ml-2"/>
-                    </td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>27/15/2024</td>
-                    <td>165965</td>
-                    <td>165965</td>
-                    <td>Approve</td>
-                    <td>
-                        <button type="submit" className="px-2 bg-red-300">Cancel</button>
-                    </td>
-                </tr>
+            <tbody className="bg-slate-300">    
+            {
+                    user.map((d)=>{
+                        return(
+                    <tr className="border-b h-[50px]  hover:bg-gray-500 hover:text-white" key={d.id}>
+                        <td>
+                            <input type="checkbox" className="cursor-pointer ml-2"/>
+                        </td>
+                        <td>{d.id}</td>
+                        <td>{d.patientId}</td>
+                        <td>{d.doctorId}</td>
+                        <td>{d.date}</td>
+                        <td>{d.roomId}</td>
+                        <td></td>
+                        <td>{d.status}</td>
+                        <td>
+                            <button type="submit" className="px-2 bg-red-300" onClick={()=>handleCancel(d.status)}>Cancel</button>
+                        </td>
+                    </tr>
+                    )})
+                } 
             </tbody>
         </table>
         <div className="footer">

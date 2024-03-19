@@ -1,17 +1,32 @@
 import { useEffect, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineXMark } from "react-icons/hi2";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 const Addappointment = () => {
-    const [isClose , setIsClose] = useState(false)
+    const [isClose , setIsClose] = useState(false);
     const [isOpen , setIsOpen] = useState(false);
     const [patients , setPatients] = useState([]);
     const [doctors , setDoctors]  = useState([]);
     const [rooms , setRooms] = useState([]);
-    const [isroom , setIsRoom] = useState(false)
+    const [isroom , setIsRoom] = useState(false);
     const [input , setInput] = useState('');
-    const [doctorInput , setDoctorInput] = useState('')
+    const [doctorInput , setDoctorInput] = useState('');
+    const [roomInput , setRoomInput] = useState('');
+    const [todate , setToDate] = useState('');
+    const [getstatus , setGetStatus] = useState('');
+    const navigate = useNavigate();
+    const [userData , setUserData] = useState(
+    {
+        patientId:'',
+        doctorId:'',
+        roomId:'',
+        date:'',
+        status:''
+    }
+    );
 
     const handleOpen = () =>{
         setIsOpen(!isOpen);
@@ -60,6 +75,13 @@ const Addappointment = () => {
             setIsClose(true)
         }
     }
+    const handleRoomSearch = (e) =>{
+        setRoomInput(e.target.value)
+        setIsRoom(false)
+        if(roomInput === ''){
+            setIsRoom(true)
+        }
+    }
     const handelOption = (name) =>{
         setInput(name)
         setIsOpen(false)
@@ -67,6 +89,10 @@ const Addappointment = () => {
     const handelDoctorOption = (name) =>{
         setDoctorInput(name);
         setIsClose(false)
+    }
+    const handleRoomInput = (No) =>{
+        setRoomInput(No)
+        setIsRoom(false)
     }
     const handelClear = () =>{
         setInput('');
@@ -76,17 +102,40 @@ const Addappointment = () => {
         setDoctorInput('')
         setIsClose(false)
     }
+    const handleRoomClear = () =>{
+        setRoomInput('');
+        setIsRoom(false)
+    }
+    const handleStatus = (e) =>{
+        setGetStatus(e.target.value);
+        setUserData(
+            {...userData , patientId:input , doctorId:doctorInput , roomId:roomInput, date:todate, status:getstatus}
+        )
+    }
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        axios.post('http://localhost:3000/users', userData)
+        .then(res=>{ 
+            console.log(res.data)
+            navigate('/appointment')
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+
   return (
     <>
-        <form className="flex justify-center items-center mt-8">
+        <form className="flex justify-center items-center mt-8" onSubmit={handleSubmit}>
             <div className="border w-[350px] h-[100%] shadow-lg rounded-lg mb-4">
-                <h2 className="text-center pt-2 text-3xl text-bold">Made An Appointment</h2>
+                <h2 className="text-center pt-2 text-3xl font-bold text-red-600">Made An Appointment</h2>
                 <div className="relative w-[100%] h-[80px] px-4 mt-2">
                     <label className="font-bold text-xl">Patient Name</label>
                     <div className="relative h-[40px] mt-2">
-                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="patient" value={input} onChange={handleChange}/>
+                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="patient" value={input} onChange={handleChange} placeholder="Patient Name"/>
                         <div className="absolute top-2 right-2 cursor-pointer flex items-center justify-center">
-                            <HiOutlineXMark   size={25} onClick={handelClear}/>
+                            <HiOutlineXMark   size={25} onClick={handelClear} className={`${input  === '' ? "hidden":"block"}`}/>
                             <MdKeyboardArrowDown size={30} onClick={handleOpen}/>
                         </div>
                     </div>
@@ -105,9 +154,9 @@ const Addappointment = () => {
                 <div className=" relative w-[100%] h-[80px] px-4 mt-2">
                     <label className="font-bold text-xl">Doctor Name</label>
                     <div className=" relative h-[40px] mt-2">
-                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="doctor" value={doctorInput} onChange={handleDoctorChange}/>
+                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="doctor" value={doctorInput} onChange={handleDoctorChange} placeholder="Doctor Name"/>
                         <div className="absolute top-2 right-2 cursor-pointer flex items-center justify-center">
-                            <HiOutlineXMark   size={25} onClick={handelDoctorClear}/>
+                            <HiOutlineXMark   size={25} onClick={handelDoctorClear} className={`${doctorInput  === '' ? "hidden":"block"}`}/>
                             <MdKeyboardArrowDown size={30} onClick={handleClick}/>
                         </div>
                     </div>
@@ -125,19 +174,24 @@ const Addappointment = () => {
                 </div>
                 <div className="w-[100%] h-[80px] px-4 mt-2 flex flex-col">
                     <label className="text-xl font-bold">Date</label>
-                    <input type="datetime-local" className="w-[80%] mt-2 border rounded-md h-[100%]"/>
+                    <input type="datetime-local" className="w-[80%] mt-2 border rounded-md h-[100%]" onChange={(e) => setToDate(e.target.value)}/>
                 </div>
                 <div className="relative w-[100%] h-[80px] px-4 mt-2">
                     <label className="font-bold text-xl">Room No</label>
-                    <div className=" relative h-[30px] mt-2">
-                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md"/>
-                        <MdKeyboardArrowDown className="absolute top-0 right-4 cursor-pointer" size={30} onClick={handleRoom}/>
+                    <div className=" relative h-[40px] mt-2">
+                        <input type="number" className="border w-[100%] h-[100%] p-2 rounded-md" onChange={handleRoomSearch} name="room" value={roomInput} placeholder="Room No"/>
+                        <div className="absolute top-2 right-6 cursor-pointer flex items-center justify-center">
+                            <HiOutlineXMark   size={25} onClick={handleRoomClear} className={`${roomInput  === '' ? "hidden":"block"}`}/>
+                            <MdKeyboardArrowDown size={30} onClick={handleRoom}/>
+                        </div>
                     </div>
                     <div className={`${isroom ?'block border absolute w-[90%] h-[100px] overflow-y-scroll text-center bg-black z-10':"hidden"}`}>
                         {
-                            rooms.map((room ,index)=>{
+                            rooms.filter((item)=>{
+                                return roomInput.toString() === "" ? item : item.No.toString().includes(roomInput)
+                            }).map((room ,index)=>{
                                 return (
-                                    <option value={room.No} key={index} className="border cursor-pointer text-xl font-semibold text-white hover:bg-gray-500">{room.No}</option>
+                                    <option value={room.No} key={index} className="border cursor-pointer text-xl font-semibold text-white hover:bg-gray-500" onClick={()=>handleRoomInput(room.No)}>{room.No}</option>
                                 )
                             })
                         }
@@ -145,7 +199,7 @@ const Addappointment = () => {
                 </div>
                 <div className="flex w-[100%] h-[40px] mt-4 px-4">
                     <label className="text-xl font-bold mr-4 text-center">Status</label>
-                    <select name="Status" id="Status" className="w-[100%] border rounded-md h-[100%]">
+                    <select name="Status" id="Status" className="w-[100%] border rounded-md h-[100%]" onClick={handleStatus}>
                         <option value="approved" className="texl-xl font-semibold">Approved</option>
                         <option value="processing" className="texl-xl font-semibold">Processing</option>
                         <option value="cancel" className="texl-xl font-semibold">Cancel</option>
