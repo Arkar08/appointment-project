@@ -108,9 +108,6 @@ const Addappointment = () => {
     }
     const handleStatus = (e) =>{
         setGetStatus(e.target.value);
-        setUserData(
-            {...userData , patientId:input , doctorId:doctorInput , roomId:roomInput, date:todate, status:getstatus}
-        )
     }
 
     const handleSubmit = (e) =>{
@@ -199,14 +196,16 @@ const Addappointment = () => {
                 </div>
                 <div className="flex w-[100%] h-[40px] mt-4 px-4">
                     <label className="text-xl font-bold mr-4 text-center">Status</label>
-                    <select name="Status" id="Status" className="w-[100%] border rounded-md h-[100%]" onClick={handleStatus}>
-                        <option value="approved" className="texl-xl font-semibold">Approved</option>
-                        <option value="processing" className="texl-xl font-semibold">Processing</option>
-                        <option value="cancel" className="texl-xl font-semibold">Cancel</option>
+                    <select name="Status"  className="w-[100%] border rounded-md h-[100%]" onClick={handleStatus}>
+                        <option value="Approved" className="texl-xl font-semibold">Approved</option>
+                        <option value="Processing" className="texl-xl font-semibold">Processing</option>
+                        <option value="Cancelled" className="texl-xl font-semibold">Cancel</option>
                     </select>
                 </div>
                 <div className="flex items-center justify-center m-4">
-                    <input type="submit"  className="py-2 w-[200px] bg-gray-400 cursor-pointer text-xl font-semibold rounded-md"/>
+                    <input type="submit"  className="py-2 w-[200px] bg-gray-400 cursor-pointer text-xl font-semibold rounded-md" onClick={()=>setUserData(
+            {...userData , patientId:input , doctorId:doctorInput , roomId:roomInput, date:todate, status:getstatus}
+        )}/>
                 </div>
             </div> 
         </form>
