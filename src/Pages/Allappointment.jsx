@@ -4,15 +4,47 @@ import { AiOutlineReload } from "react-icons/ai";
 import { AiOutlineDelete } from "react-icons/ai";
 import { MdEdit } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../Components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 
 const Allappointment = () => {
+
     const [user , setUser] = useState([]);
     const [search , setSearch] = useState('');
+    const [currentPage , setCurrentPage] = useState(1);
+    const [itemPerPage] = useState(2);
+    
+    const [pageNumberLimit ] = useState(5);
+    const [maxPageNumberLimit , setMaxPageNumberLimit] = useState(5);
+    const [miniPageNumberLimit , setMiniPageNumberLimit] = useState(0);
+    const pages = [];
 
+  for(let i = 1; i<=Math.ceil(user.length/itemPerPage);i++){
+    pages.push(i)
+  }
+  const lastIndex = currentPage * itemPerPage;
+  const firstIndex = lastIndex - itemPerPage;
+  const currentIndex = user.slice(firstIndex ,lastIndex)
+
+    const pageClick = (e) =>{
+        setCurrentPage(Number(e.target.id))
+    }
+
+    const prevClick = () =>{
+        setCurrentPage(prev => prev -1)
+        if((currentPage -1 )% pageNumberLimit == 0){
+            setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit)
+            setMiniPageNumberLimit(miniPageNumberLimit - pageNumberLimit)
+        }     
+    }
+    const nextClick = () =>{
+        setCurrentPage(prev => prev +1)
+        if(currentPage + 1 > maxPageNumberLimit){
+            setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit)
+            setMiniPageNumberLimit(miniPageNumberLimit + pageNumberLimit)
+        }
+    }
     const reloadClick = () =>{
         window.location.reload()
     }
@@ -24,7 +56,6 @@ const Allappointment = () => {
                 ).catch(err=>{
                     console.log(err)
                 })
-           
         } 
         getData()
     })
@@ -42,8 +73,16 @@ const Allappointment = () => {
         })
       }
     }
+    const handleCancel = (id) =>{
+        axios.put(`http://localhost:3000/users/${id}`,{
+            status:"Cancelled"
+        })
+        .then(res=>{
+            console.log(res.data)
+        })
+    }
   return (
-    <>
+    <div className="relative">
         <div className="flex justify-between items-center px-12 mt-4 p-4 bg-blue-300 shadow-md">
             <div className="icon flex justify-start items-center">
                 <Link to='/appointment/add'><FaSquarePlus size={30} className="cursor-pointer mr-4"/></Link>
@@ -85,14 +124,14 @@ const Allappointment = () => {
             </thead>
             <tbody className="bg-slate-300">    
             {
-                    user.filter((u)=>{
+                    currentIndex.filter((u)=>{
                         return search.toLowerCase() === ''? u : u.id.toLowerCase().includes(search) || u.patientId.toLowerCase().includes(search) || u.doctorId.toLowerCase().includes(search)
                         || u.roomId.toString().includes(search) || u.status.toLowerCase().includes(search)
                     })
                     .map((d)=>{
                         return(
-                    <tr className="border-b h-[50px]  hover:bg-gray-500 hover:text-white" key={d.id}>
-                        <td className="flex justify-center items-center text-center mt-4">
+                    <tr className="border-b h-[40px]  hover:bg-gray-500 hover:text-white" key={d.id}>
+                        <td className="flex justify-center items-center text-center mt-2">
                             <Link to={`/appointment/edit/${d.id}`}><MdEdit size={20} className="cursor-pointer"/></Link>
                             <AiOutlineDelete size={20} onClick={()=>handleDelete(d.id)} className="cursor-pointer"/>
                         </td>
@@ -104,17 +143,39 @@ const Allappointment = () => {
                         <td></td>
                         <td>{d.status}</td>
                         <td>
-                            <button type="submit" className="px-2 bg-red-300">Cancel</button>
+                            <button type="submit" className="px-2 bg-red-300" onClick={()=>handleCancel(d.id)}>Cancel</button>
                         </td>
                     </tr>
                     )})
                 } 
             </tbody>
         </table>
-        <div className="footer">
-            <Footer />
+        <div className="flex justify-between items-center px-4 my-8 w-[100%] fixed bottom-0 h-[40px] bg-slate-400 shadow-md">
+                <h2 className="text-xl text-white">page {currentPage} to {pages.length} of {pages.length} results</h2> 
+                <select className="border">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            <div className="pagination">
+                    <button type="button" className="py-1 w-[40px] bg-slate-200 mr-1 cursor-pointer" onClick={prevClick}
+                    disabled={currentPage===pages[0] ? true :false}>Prev</button>
+                    {
+                    pages.map((p,index)=>{
+                        if(p < maxPageNumberLimit + 1 && p > miniPageNumberLimit){
+                        return(
+                        <button type="button" className={currentPage === p ? "bg-red-400 py-1 w-[30px] cursor-pointer" : "py-1 w-[30px] bg-slate-200 mr-1 cursor-pointer" } key={index} id={p} onClick={pageClick}>{p}</button>
+                     )}
+                    else{
+                        return null;
+                     }
+                    })
+                }
+                <button type="button" className="py-1 w-[40px] bg-slate-200 mr-1 cursor-pointer" onClick={nextClick}
+                disabled={currentPage===pages[pages.length-1] ? true :false}>Next</button>
+            </div>
         </div>
-    </>
+    </div>
   )
 }
 

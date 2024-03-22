@@ -126,11 +126,11 @@ const Addappointment = () => {
     <>
         <form className="flex justify-center items-center mt-8" onSubmit={handleSubmit}>
             <div className="border w-[350px] h-[100%] shadow-lg rounded-lg mb-4">
-                <h2 className="text-center pt-2 text-3xl font-bold text-red-600">Made An Appointment</h2>
+                <h2 className="text-center pt-2 text-3xl font-bold text-blue-300">Made An Appointment</h2>
                 <div className="relative w-[100%] h-[80px] px-4 mt-2">
-                    <label className="font-bold text-xl">Patient Name</label>
+                    <label className="font-bold text-xl text-red-400">Patient Name</label>
                     <div className="relative h-[40px] mt-2">
-                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="patient" value={input} onChange={handleChange} placeholder="Patient Name"/>
+                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="patientID" value={input} onChange={handleChange} placeholder="Patient Name"/>
                         <div className="absolute top-2 right-2 cursor-pointer flex items-center justify-center">
                             <HiOutlineXMark   size={25} onClick={handelClear} className={`${input  === '' ? "hidden":"block"}`}/>
                             <MdKeyboardArrowDown size={30} onClick={handleOpen}/>
@@ -149,9 +149,9 @@ const Addappointment = () => {
                     </div>
                 </div>
                 <div className=" relative w-[100%] h-[80px] px-4 mt-2">
-                    <label className="font-bold text-xl">Doctor Name</label>
+                    <label className="font-bold text-xl text-red-400">Doctor Name</label>
                     <div className=" relative h-[40px] mt-2">
-                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="doctor" value={doctorInput} onChange={handleDoctorChange} placeholder="Doctor Name"/>
+                        <input type="text" className="border w-[100%] h-[100%] p-2 rounded-md" name="doctorID" value={doctorInput} onChange={handleDoctorChange} placeholder="Doctor Name"/>
                         <div className="absolute top-2 right-2 cursor-pointer flex items-center justify-center">
                             <HiOutlineXMark   size={25} onClick={handelDoctorClear} className={`${doctorInput  === '' ? "hidden":"block"}`}/>
                             <MdKeyboardArrowDown size={30} onClick={handleClick}/>
@@ -170,13 +170,13 @@ const Addappointment = () => {
                     </div>
                 </div>
                 <div className="w-[100%] h-[80px] px-4 mt-2 flex flex-col">
-                    <label className="text-xl font-bold">Date</label>
-                    <input type="datetime-local" className="w-[80%] mt-2 border rounded-md h-[100%]" onChange={(e) => setToDate(e.target.value)}/>
+                    <label className="text-xl font-bold text-red-400">Date</label>
+                    <input type="datetime-local" className="w-[100%] mt-2 border rounded-md h-[100%]"value={todate} name="date" onChange={(e) => setToDate(e.target.value)}/>
                 </div>
                 <div className="relative w-[100%] h-[80px] px-4 mt-2">
-                    <label className="font-bold text-xl">Room No</label>
+                    <label className="font-bold text-xl text-red-400">Room No</label>
                     <div className=" relative h-[40px] mt-2">
-                        <input type="number" className="border w-[100%] h-[100%] p-2 rounded-md" onChange={handleRoomSearch} name="room" value={roomInput} placeholder="Room No"/>
+                        <input type="number" className="border w-[100%] h-[100%] p-2 rounded-md" onChange={handleRoomSearch} name="roomId" value={roomInput} placeholder="Room No"/>
                         <div className="absolute top-2 right-6 cursor-pointer flex items-center justify-center">
                             <HiOutlineXMark   size={25} onClick={handleRoomClear} className={`${roomInput  === '' ? "hidden":"block"}`}/>
                             <MdKeyboardArrowDown size={30} onClick={handleRoom}/>
@@ -195,15 +195,15 @@ const Addappointment = () => {
                     </div>
                 </div>
                 <div className="flex w-[100%] h-[40px] mt-4 px-4">
-                    <label className="text-xl font-bold mr-4 text-center">Status</label>
-                    <select name="Status"  className="w-[100%] border rounded-md h-[100%]" onClick={handleStatus}>
-                        <option value="Approved" className="texl-xl font-semibold">Approved</option>
-                        <option value="Processing" className="texl-xl font-semibold">Processing</option>
-                        <option value="Cancelled" className="texl-xl font-semibold">Cancel</option>
+                    <label className="text-xl font-bold mr-4 text-center text-sky-600">Status</label>
+                    <select name="Status"  className="w-[100%] border rounded-md h-[100%] " onClick={handleStatus}>
+                        <option value="Approved" className="texl-xl font-semibold text-gray-500">Approved</option>
+                        <option value="Processing" className="texl-xl font-semibold text-gray-500">Processing</option>
+                        <option value="Cancelled" className="texl-xl font-semibold text-gray-500">Cancel</option>
                     </select>
                 </div>
                 <div className="flex items-center justify-center m-4">
-                    <input type="submit"  className="py-2 w-[200px] bg-gray-400 cursor-pointer text-xl font-semibold rounded-md" onClick={()=>setUserData(
+                    <input type="submit"  className="py-2 w-[200px] bg-green-400 text-white cursor-pointer text-xl font-semibold rounded-md" onClick={()=>setUserData(
             {...userData , patientId:input , doctorId:doctorInput , roomId:roomInput, date:todate, status:getstatus}
         )}/>
                 </div>
